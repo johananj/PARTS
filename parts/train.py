@@ -8,10 +8,10 @@ import os
 from keras.utils import to_categorical
 from keras.models import Sequential, load_model
 from keras.callbacks import ModelCheckpoint, CSVLogger
-from keras.layers import Conv1D, MaxPool1D, Dense, Flatten, Dropout
+from keras.layers import Conv1D, LSTM, MaxPool1D, Dense, Flatten, Dropout
 
 
-def compile_model(dpo, ks = [9,18], ds = [64,32], framesize=None, feature_dim=None):
+def compile_model(dpo, ks = [18, 9], ds = [64, 32], arch = 00, framesize=None, feature_dim=None):
   '''
   dpo: An instance of the DataPrep class.
   ks: Kernel sizes. 
@@ -25,22 +25,29 @@ def compile_model(dpo, ks = [9,18], ds = [64,32], framesize=None, feature_dim=No
     feature_dim = dpo.feature_dim
   
   model = Sequential()
-  model.add(Conv1D(filters=24, kernel_size=ks[0], activation='relu', input_shape=[framesize, feature_dim]))
-  model.add(Conv1D(filters=32, kernel_size=ks[0], activation='relu'))
-  model.add(MaxPool1D(pool_size=2))
-  model.add(Dropout(rate=0.25))
+  if arch == 00:
+    model.add(Conv1D(filters=24, kernel_size=ks[0], activation='relu', input_shape=[framesize, feature_dim]))
+    model.add(Conv1D(filters=24, kernel_size=ks[0], activation='relu'))
+    model.add(MaxPool1D(pool_size=2))
+    model.add(Dropout(rate=0.25))
 
-  model.add(Conv1D(filters=48, kernel_size=ks[1], activation='relu'))
-  model.add(Conv1D(filters=48, kernel_size=ks[1], activation='relu'))
-  model.add(MaxPool1D(pool_size=2))
-  model.add(Dropout(rate=0.25))
+    model.add(Conv1D(filters=48, kernel_size=ks[1], activation='relu'))
+    model.add(Conv1D(filters=48, kernel_size=ks[1], activation='relu'))
+    model.add(MaxPool1D(pool_size=2))
+    model.add(Dropout(rate=0.25))
+    
+    model.add(Flatten())
+    model.add(Dense(ds[0], activation='relu'))
+    model.add(Dropout(rate=0.25))
+    model.add(Dense(ds[1], activation='relu'))
+    model.add(Dropout(rate=0.25))
+    model.add(Dense(2, activation='softmax'))
+  
+  elif arch == 10:
+    model.add(LSTM(18, return_sequences=True))
+    model.add(LSTM(18))
+    model.add(Dense(2, activation='softmax'))
 
-  model.add(Flatten())
-  model.add(Dense(ds[0], activation='relu'))
-  model.add(Dropout(rate=0.25))
-  model.add(Dense(ds[1], activation='relu'))
-  model.add(Dropout(rate=0.25))
-  model.add(Dense(2, activation='softmax'))
 
   model.compile(
     loss='categorical_crossentropy', 
