@@ -11,8 +11,7 @@
 
 ## TO-DO
 - [x] Example python notebook. 
-- [ ] More sample model architectures, for easy evaluation.
-- [ ] Include LSTM architectures.
+- [x] Include a basic LSTM architecture.
 - [ ] Data preparation classes for:
     - [ ] Whisper-normal speech classification using W-TIMIT.
     - [ ] Literary-colloquial Tamil speech classification using the Microsoft Dataset.
