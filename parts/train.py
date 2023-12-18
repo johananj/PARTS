@@ -11,7 +11,7 @@ from keras.callbacks import ModelCheckpoint, CSVLogger
 from keras.layers import Conv1D, LSTM, MaxPool1D, Dense, Flatten, Dropout
 
 
-def compile_model(dpo, ks = [18, 9], ds = [64, 32], arch = 00, framesize=None, feature_dim=None):
+def compile_model(dpo, ks = [18, 9], ds = [64, 32], arch = '00', framesize=None, feature_dim=None):
   '''
   dpo: An instance of the DataPrep class.
   ks: Kernel sizes. 
@@ -25,7 +25,7 @@ def compile_model(dpo, ks = [18, 9], ds = [64, 32], arch = 00, framesize=None, f
     feature_dim = dpo.feature_dim
   
   model = Sequential()
-  if arch == 00:
+  if arch == '00':
     model.add(Conv1D(filters=24, kernel_size=ks[0], activation='relu', input_shape=[framesize, feature_dim]))
     model.add(Conv1D(filters=24, kernel_size=ks[0], activation='relu'))
     model.add(MaxPool1D(pool_size=2))
@@ -43,7 +43,7 @@ def compile_model(dpo, ks = [18, 9], ds = [64, 32], arch = 00, framesize=None, f
     model.add(Dropout(rate=0.25))
     model.add(Dense(2, activation='softmax'))
   
-  elif arch == 10:
+  elif arch == '10':
     model.add(LSTM(18, return_sequences=True))
     model.add(LSTM(18))
     model.add(Dense(2, activation='softmax'))
@@ -78,13 +78,13 @@ def model_training(dpo, checkpoint_dir, model=None, num_epoch=5, load_model_flag
     os.makedirs(checkpoint_dir)
       
   my_callbacks = [ModelCheckpoint(filepath=checkpoint_dir+ '/ckpt-loss={loss:.2f}',
-    save_freq=122), CSVLogger(filename=checkpoint_dir+ '/log.csv', append=True, separator=';')]
+    save_freq=dpo.batch_size), CSVLogger(filename=checkpoint_dir+ '/log.csv', append=True, separator=';')]
       
   if load_model_flag == True:
     model = load_model(model_checkpoint)
     print('Using Latest Checkpoint')
 
   model.fit(x = dpo.generate_data(num_batches), 
-          steps_per_epoch = 122*3, 
+          steps_per_epoch = dpo.batch_size, 
           epochs = num_epoch, callbacks = my_callbacks)
   return True
