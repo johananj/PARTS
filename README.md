@@ -14,4 +14,5 @@
 - [x] Include a basic LSTM architecture.
 - [ ] Data preparation classes for:
     - [ ] Whisper-normal speech classification using W-TIMIT.
-    - [ ] Literary-colloquial Tamil speech classification using the Microsoft Dataset.
+    - [x] Literary-colloquial Tamil speech classification using the Microsoft Dataset.
+    - [x] Sleep detection.
