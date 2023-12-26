@@ -1,4 +1,4 @@
-# IN PROGRESS
+![Static Badge](https://img.shields.io/badge/under-construction-orange)
 
 # PARTS - PAttern Recognition for Time Series data. 
 
