@@ -9,6 +9,11 @@
 - In cases involving feature extraction (instead of raw data), it is carried out live during the training phase, for each batch.
 - An example use case can be found in example.ipynb
 
+## Citation
+If you use this code for your work, please consider citing the corresponding paper(s): 
+1. [Quartered Spectral Envelope and 1D-CNN-Based Classification of Normally Phonated and Whispered Speech](https://link.springer.com/article/10.1007/s00034-022-02263-5)
+2. [Literary and Colloquial Tamil Dialect Identification](https://link.springer.com/article/10.1007/s00034-022-01971-2)
+
 ## TO-DO
 - [x] Example python notebook. 
 - [x] Include a basic LSTM architecture.
