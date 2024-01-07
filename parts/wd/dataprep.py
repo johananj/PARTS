@@ -139,7 +139,7 @@ class DataPrep:
     # S = librosa.feature.mfcc(S=S, n_mfcc = n_mel)
     return S
 
-  def extract_features_batch(self, wavefile_list, feature=None): 
+  def extract_features_batch(self, wavefile_list): 
     '''
     Extract a batch of features. 
 
