@@ -11,7 +11,7 @@ from keras.callbacks import ModelCheckpoint, CSVLogger
 from keras.layers import Conv1D, LSTM, MaxPool1D, Dense, Flatten, Dropout
 
 
-def compile_model(dpo, ks = [18, 9], ds = [64, 32], arch = '00', framesize=None, feature_dim=None):
+def compile_model(dpo, ks = [9, 5], ds = [64, 32], arch = '00', framesize=None, feature_dim=None):
   '''
   dpo: An instance of the DataPrep class.
   ks: Kernel sizes. 
@@ -57,7 +57,7 @@ def compile_model(dpo, ks = [18, 9], ds = [64, 32], arch = '00', framesize=None,
   print('Model Compiled')
   return model
 
-def model_training(dpo, checkpoint_dir, model=None, num_epoch=5, load_model_flag=False,model_checkpoint=None):
+def model_training(dpo, checkpoint_dir, model=None, num_epoch=5, load_model_flag=False, model_checkpoint=None save_frequency=None):
   '''
   Inputs:
     dpo: An instance of the DataPrep class.
@@ -73,12 +73,15 @@ def model_training(dpo, checkpoint_dir, model=None, num_epoch=5, load_model_flag
   if model is None:
     model = compile_model(dpo)
   
+  if save_frequency is None:
+    save_frequency = dpo.batch_size/4
+  
   num_batches = dpo.batch_size*num_epoch
   if not os.path.exists(checkpoint_dir):
     os.makedirs(checkpoint_dir)
       
   my_callbacks = [ModelCheckpoint(filepath=checkpoint_dir+ '/ckpt-loss={loss:.2f}',
-    save_freq=dpo.batch_size), CSVLogger(filename=checkpoint_dir+ '/log.csv', append=True, separator=';')]
+    save_freq=save_frequency), CSVLogger(filename=checkpoint_dir+ '/log.csv', append=True, separator=';')]
       
   if load_model_flag == True:
     model = load_model(model_checkpoint)
