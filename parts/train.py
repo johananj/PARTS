@@ -1,13 +1,13 @@
 # import numpy as np
 # import pandas as pd
 # import pyarrow.parquet as pq
-# import time, random
+import time
 import os
 # import matplotlib.pyplot as plt
 # from scipy import signal
 from keras.utils import to_categorical
 from keras.models import Sequential, load_model
-from keras.callbacks import ModelCheckpoint, CSVLogger
+from keras.callbacks import ModelCheckpoint, CSVLogger, Callback
 from keras.layers import Conv1D, LSTM, MaxPool1D, Dense, Flatten, Dropout
 
 
@@ -57,7 +57,7 @@ def compile_model(dpo, ks = [9, 5], ds = [64, 32], arch = '00', framesize=None, 
   print('Model Compiled')
   return model
 
-def model_training(dpo, checkpoint_dir, model=None, num_epoch=5, load_model_flag=False, model_checkpoint=None save_frequency=None):
+def model_training(dpo, checkpoint_dir, model=None, num_epoch=5, load_model_flag=False, model_checkpoint=None, save_frequency=None):
   '''
   Inputs:
     dpo: An instance of the DataPrep class.
@@ -79,9 +79,21 @@ def model_training(dpo, checkpoint_dir, model=None, num_epoch=5, load_model_flag
   num_batches = dpo.batch_size*num_epoch
   if not os.path.exists(checkpoint_dir):
     os.makedirs(checkpoint_dir)
+  
+  checkpoint_callback = ModelCheckpoint(filepath=checkpoint_dir + '/ckpt-loss={loss:.2f}', 
+                                        save_freq=save_frequency)
+  logger_callback = CSVLogger(filename=checkpoint_dir+ '/log.csv', append=True, separator=';')
+  
+  class SleepCallback(Callback):
+    def on_train_batch_end(self, batch, logs=None):
+      time.sleep(3)
+
+    def on_epoch_end(self, epoch, logs=None):
+      time.sleep(180)
       
-  my_callbacks = [ModelCheckpoint(filepath=checkpoint_dir+ '/ckpt-loss={loss:.2f}',
-    save_freq=save_frequency), CSVLogger(filename=checkpoint_dir+ '/log.csv', append=True, separator=';')]
+  my_callbacks = [checkpoint_callback, 
+                  logger_callback, 
+                  SleepCallback(),]
       
   if load_model_flag == True:
     model = load_model(model_checkpoint)
