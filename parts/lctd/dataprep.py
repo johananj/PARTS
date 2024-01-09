@@ -99,7 +99,8 @@ class DataPrep:
       for i in np.arange(np.shape(wavefile_list)[0]):
         wavefile_path = wavefile_list[i]
         S = self.extract_features(wavefile_path, self.feature_index)
-        S = np.reshape(S, [1,np.shape(S)[0],np.shape(S)[1]])
+        # S = np.reshape(S, [1,np.shape(S)[0],np.shape(S)[1]])
+        S = self.reshape_x(S)
         x_data = S
         labels = self.get_framelabels(wavefile_path, 1)
         labels = to_categorical(labels, 2)
