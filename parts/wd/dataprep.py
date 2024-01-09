@@ -18,10 +18,12 @@ class DataPrep:
     '''
     if train_list is None and test_list is None:
       print("No train or test files provided.")
-    elif train_list is not None:
+    
+    if train_list is not None:
       self.train_list = np.array(train_list)
       self.batch_size = len(self.train_list)
-    elif test_list is not None:
+    
+    if test_list is not None:
       self.test_list = np.array(test_list)
     
     self.feature=feature
