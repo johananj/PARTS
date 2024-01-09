@@ -17,7 +17,7 @@ If you use this code for your work, please consider citing the corresponding pap
 ## TO-DO
 - [x] Example python notebook. 
 - [x] Include a basic LSTM architecture.
-- [ ] Data preparation classes for:
-    - [ ] Whisper-normal speech classification using W-TIMIT.
+- [x] Data preparation classes for:
+    - [x] Whisper-normal speech classification using W-TIMIT.
     - [x] Literary-colloquial Tamil speech classification using the Microsoft Dataset.
     - [x] Sleep detection.
