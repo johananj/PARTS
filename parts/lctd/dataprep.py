@@ -98,36 +98,24 @@ class DataPrep:
       # Single file. For Testing. batch size should be 1
       for i in np.arange(np.shape(wavefile_list)[0]):
         wavefile_path = wavefile_list[i]
-        # print(wavefile_path)
         S = self.extract_features(wavefile_path, self.feature_index)
         S = np.reshape(S, [1,np.shape(S)[0],np.shape(S)[1]])
         x_data = S
         labels = self.get_framelabels(wavefile_path, 1)
         labels = to_categorical(labels, 2)
         y_data = labels
-        # print(np.shape(S), np.shape(labels))
-        # print(wavefile_path, labels, np.shape(x_data), np.shape(y_data))
-        # time.sleep(1)
-        # print('==')
     else: 
       # Multiple files. For Training.
       x_data = np.zeros([2,self.framesize,self.feature_dim])
       y_data = np.zeros([2,1])
 
       for wavefile_path in wavefile_list:
-        # print(wavefile_path)
         S = self.extract_features(wavefile_path, self.feature_index)
-        # print(np.shape(S))
         S = self.reshape_x(S)
-        # print(np.shape(S))
-        # time.sleep(1)
         x_data = np.concatenate((x_data, S), axis=0)
         
         labels = self.get_framelabels(wavefile_path, np.shape(S)[0])
         y_data = np.concatenate((y_data, labels), axis=0)
-        # print(wavefile_path, labels, np.shape(x_data), np.shape(y_data))
-        # time.sleep(0.1)
-        # print('==')
 
       x_data = np.delete(x_data, [0,1], axis=0)
       y_data = np.delete(y_data, [0,1], axis=0)
@@ -135,8 +123,8 @@ class DataPrep:
       # convert integers to dummy variables (i.e. one hot encoded)
       y_data = to_categorical(y_data, 2)
 
-    print(np.shape(x_data))
-    print(np.shape(y_data))
+    # print(np.shape(x_data))
+    # print(np.shape(y_data))
     return x_data, y_data  
   
   def reshape_x(self, feature_frames):
@@ -159,10 +147,8 @@ class DataPrep:
     for i in range(num_batches):
       time.sleep(1)
       wavefiles_select = np.random.randint(self.batch_size , size=(self.mini_batchsize))
-      print(wavefiles_select)
-      print(type(wavefiles_select))
       wavefile_list = self.train_list[wavefiles_select]
-      print("\nBatch " + str(i) + " out of " + str(num_batches))
+      # print("\nBatch " + str(i) + " out of " + str(num_batches))
       x_train, y_train = self.extract_features_batch(wavefile_list)
       yield x_train, y_train
 
