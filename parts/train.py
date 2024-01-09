@@ -74,7 +74,7 @@ def model_training(dpo, checkpoint_dir, model=None, num_epoch=5, load_model_flag
     model = compile_model(dpo)
   
   if save_frequency is None:
-    save_frequency = dpo.batch_size/4
+    save_frequency = int(dpo.batch_size/4)
   
   num_batches = dpo.batch_size*num_epoch
   if not os.path.exists(checkpoint_dir):
