@@ -43,7 +43,10 @@ class DataPrep:
     }
     
     self.feature_dim = len(self.featureset[self.feature_index])
-    self.framesize = framesize 
+    if framesize is None: 
+      self.framesize = 2000
+    else:
+      self.framesize = framesize 
     if self.train_list is not None:
       self.batch_size = len(self.train_list)
     self.mini_batchsize = mini_batchsize
@@ -91,7 +94,7 @@ class DataPrep:
     '''
     - extract features for a batch of files in a list
     '''
-    if self.framesize is None and np.shape(wavefile_list)[0] == 1:
+    if np.shape(wavefile_list)[0] == 1:
       # Single file. For Testing. batch size should be 1
       for i in np.arange(np.shape(wavefile_list)[0]):
         wavefile_path = wavefile_list[i]
@@ -108,7 +111,6 @@ class DataPrep:
         # print('==')
     else: 
       # Multiple files. For Training.
-      if self.framesize is None: self.framesize = 2000
       x_data = np.zeros([2,self.framesize,self.feature_dim])
       y_data = np.zeros([2,1])
 
